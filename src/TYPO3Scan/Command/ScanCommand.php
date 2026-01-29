@@ -35,7 +35,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use TYPO3\CMS\Scanner\Domain\Model\DirectoryMatches;
 use TYPO3\CMS\Scanner\Domain\Model\FileMatches;
-use TYPO3\CMS\Scanner\Domain\Model\Match;
+use TYPO3\CMS\Scanner\Domain\Model\TheMatch;
 use TYPO3\CMS\Scanner\Matcher\AbstractCoreMatcher;
 
 /**
@@ -107,7 +107,7 @@ EOT
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $stdErr = $output;
         if ($output instanceof ConsoleOutputInterface) {
@@ -119,7 +119,7 @@ EOT
         $path = realpath($input->getArgument('path'));
         if (!is_dir($path)) {
             $stdErr->writeln(sprintf('Path does not exist: "%s"', $input->getArgument('path')));
-            exit;
+            return Command::FAILURE;
         }
 
         // Get target version
@@ -152,8 +152,8 @@ EOT
 
         $percentagesByType = $this->getPercentagesByType($this->getCountsByType($directoryMatches), $total);
 
-        $loader = new \Twig_Loader_Filesystem($templatePaths);
-        $twig = new \Twig_Environment($loader);
+        $loader = new \Twig\Loader\FilesystemLoader($templatePaths);
+        $twig = new \Twig\Environment($loader);
         $twig->addFilter($this->getChangeTitle());
         $twig->addFilter($this->getEscapeDollarFilter());
         $twig->addFilter($this->getLineFromFileFilter());
@@ -194,10 +194,10 @@ EOT
         }
 
         if ($total > 0) {
-            return 1;
+            return Command::FAILURE;
         }
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     /**
@@ -219,7 +219,7 @@ EOT
         /** @var FileMatches $fileMatches */
         foreach ($directoryMatches as $fileMatches) {
             $filteredFileMatches = new FileMatches($fileMatches->getPath());
-            /** @var Match $fileMatch */
+            /** @var TheMatch $fileMatch */
             foreach ($fileMatches as $fileMatch) {
                 if (in_array($fileMatch->getType(), $only, true)) {
                     $filteredFileMatches->append($fileMatch);
@@ -252,7 +252,7 @@ EOT
         /** @var FileMatches $fileMatches */
         foreach ($directoryMatches as $fileMatches) {
             $filteredFileMatches = new FileMatches($fileMatches->getPath());
-            /** @var Match $fileMatch */
+            /** @var TheMatch $fileMatch */
             foreach ($fileMatches as $fileMatch) {
                 if (in_array(strtoupper($fileMatch->getIndicator()), $indicators, true)) {
                     $filteredFileMatches->append($fileMatch);
@@ -290,7 +290,7 @@ EOT
         /** @var FileMatches $fileMatches */
         foreach ($directoryMatches as $fileMatches) {
             $filteredFileMatches = new FileMatches($fileMatches->getPath());
-            /** @var Match $fileMatch */
+            /** @var TheMatch $fileMatch */
             foreach ($fileMatches as $fileMatch) {
                 $issueNumbers = [];
                 $skip = $defaultSkip;
@@ -320,11 +320,11 @@ EOT
     /**
      * TWIG filter to get line from file
      *
-     * @return \Twig_Filter
+     * @return \Twig\TwigFilter
      */
-    protected function getLineFromFileFilter(): \Twig_Filter
+    protected function getLineFromFileFilter(): \Twig\TwigFilter
     {
-        return new \Twig_Filter('getLineFromFile', function ($fileName, $lineNumber) {
+        return new \Twig\TwigFilter('getLineFromFile', function ($fileName, $lineNumber) {
             return $this->getLineFromFile($fileName, $lineNumber);
         });
     }
@@ -332,11 +332,11 @@ EOT
     /**
      * TWIG filter to get lines from file
      *
-     * @return \Twig_Filter
+     * @return \Twig\TwigFilter
      */
-    protected function getLinesFromFileFilter(): \Twig_Filter
+    protected function getLinesFromFileFilter(): \Twig\TwigFilter
     {
-        return new \Twig_Filter('getLinesFromFile', function ($fileName, $lineNumber, $before = 2, $after = 2) {
+        return new \Twig\TwigFilter('getLinesFromFile', function ($fileName, $lineNumber, $before = 2, $after = 2) {
             return $this->getLinesFromFile($fileName, $lineNumber, $before, $after);
         });
     }
@@ -344,47 +344,41 @@ EOT
     /**
      * TWIG filter for getting the name of a file without the extension
      *
-     * @return \Twig_Filter
+     * @return \Twig\TwigFilter
      */
-    protected function getFilenameFilter(): \Twig_Filter
+    protected function getFilenameFilter(): \Twig\TwigFilter
     {
-        return new \Twig_Filter('getFilename', function ($path) {
+        return new \Twig\TwigFilter('getFilename', function ($path) {
             return pathinfo($path, PATHINFO_FILENAME);
         });
     }
 
     /**
      * TWIG filter for escaping the dollar character
-     *
-     * @return \Twig_Filter
      */
-    protected function getEscapeDollarFilter(): \Twig_Filter
+    protected function getEscapeDollarFilter(): \Twig\TwigFilter
     {
-        return new \Twig_Filter('escapeDollar', function ($string) {
+        return new \Twig\TwigFilter('escapeDollar', function ($string) {
             return str_replace('$', '\$', $string);
         });
     }
 
     /**
      * TWIG filter to get link to online documentation
-     *
-     * @return \Twig_Filter
      */
-    protected function getOnlineDocumentFilter(): \Twig_Filter
+    protected function getOnlineDocumentFilter(): \Twig\TwigFilter
     {
-        return new \Twig_Filter('getOnlineDocument', function ($path) {
+        return new \Twig\TwigFilter('getOnlineDocument', function ($path) {
             return $this->findOnlineDocumentation($path);
         });
     }
 
     /**
      * TWIG filter to get the title of the change
-     *
-     * @return \Twig_Filter
      */
-    protected function getChangeTitle(): \Twig_Filter
+    protected function getChangeTitle(): \Twig\TwigFilter
     {
-        return new \Twig_Filter('getChangeTitle', function ($path) {
+        return new \Twig\TwigFilter('getChangeTitle', function ($path) {
             $rstPath = $this->findRstFile($path);
             return $this->extractTitleFromRstFile($rstPath);
         });
@@ -503,11 +497,11 @@ EOT
     protected function getCountsByType($directoryMatches): array
     {
         $countsByType = [
-            AbstractCoreMatcher::INDICATOR_STRONG => 0,
-            AbstractCoreMatcher::INDICATOR_WEAK => 0
+            'strong' => 0,
+            'weak' => 0
         ];
         foreach ($directoryMatches as $fileMatches) {
-            /** @var Match $fileMatch */
+            /** @var TheMatch $fileMatch */
             foreach ($fileMatches as $fileMatch) {
                 if (!array_key_exists($fileMatch->getIndicator(), $countsByType)) {
                     $countsByType[$fileMatch->getIndicator()] = 0;

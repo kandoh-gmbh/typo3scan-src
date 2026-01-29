@@ -52,7 +52,7 @@ class Application extends BaseApplication
     /**
      * @return string
      */
-    public function getHelp()
+    public function getHelp(): string
     {
         $love = $this->isColorSupported() ? "\e[31m♥\e[0m" : "♥";
         return sprintf(self::$logo, $love) . parent::getHelp();
@@ -62,7 +62,7 @@ class Application extends BaseApplication
      * Check if color output is supported
      * @return bool
      */
-    private function isColorSupported()
+    private function isColorSupported(): bool
     {
         if (DIRECTORY_SEPARATOR === '\\') {
             return getenv('ANSICON') !== false || getenv('ConEmuANSI') === 'ON';

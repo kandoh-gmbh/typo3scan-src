@@ -193,7 +193,7 @@ class ScannerService
                 break;
         }
 
-        $this->scanner = ScannerFactory::create()->createFor(\PhpParser\ParserFactory::PREFER_PHP7);
+        $this->scanner = ScannerFactory::create()->createFor();
     }
 
     public function scan($path)
