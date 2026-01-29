@@ -6,3 +6,4 @@
 typo3scan.phar
 /.idea
 !/typo3scan.phar
+/bin/yaml-lint
