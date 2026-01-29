@@ -56,6 +56,36 @@ class ScannerService
         $this->setMatcherBundlePath();
 
         switch ($version) {
+            case '14':
+                $this->collection = new MatcherBundleCollection(
+                    new \TYPO3\CMS\Scanner\Domain\Model\MatcherBundle(
+                        self::$matcherBundleBasePath . 'v' . $version,
+                        '',
+                        Matcher\ArrayDimensionMatcher::class,
+                        Matcher\ArrayGlobalMatcher::class,
+                        Matcher\ClassConstantMatcher::class,
+                        Matcher\ClassNameMatcher::class,
+                        Matcher\ConstantMatcher::class,
+                        Matcher\ConstructorArgumentMatcher::class,
+                        Matcher\FunctionCallMatcher::class,
+                        Matcher\InterfaceMethodChangedMatcher::class,
+                        Matcher\MethodAnnotationMatcher::class,
+                        Matcher\MethodArgumentDroppedMatcher::class,
+                        Matcher\MethodArgumentDroppedStaticMatcher::class,
+                        Matcher\MethodArgumentRequiredMatcher::class,
+                        Matcher\MethodArgumentRequiredStaticMatcher::class,
+                        Matcher\MethodArgumentUnusedMatcher::class,
+                        Matcher\MethodCallArgumentValueMatcher::class,
+                        Matcher\MethodCallMatcher::class,
+                        Matcher\MethodCallStaticMatcher::class,
+                        Matcher\PropertyAnnotationMatcher::class,
+                        Matcher\PropertyExistsStaticMatcher::class,
+                        Matcher\PropertyProtectedMatcher::class,
+                        Matcher\PropertyPublicMatcher::class,
+                        Matcher\ScalarStringMatcher::class
+                    )
+                );
+                break;
             case '13':
             case '12':
             case '11':
