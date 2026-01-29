@@ -43,9 +43,9 @@ class Application extends BaseApplication
   / /     / / ____/ /_/ /__/ /  (__  ) /__/ /_/ / / / /
  /_/     /_/_/    \____/____/  /____/\___/\__,_/_/ /_/
 
-        https://github.com/tuurlijk/typo3scan
+        https://github.com/mschwemer/typo3scan
 
-          Hand coded with %s️ by Michiel Roos 
+        Hand coded with %s️ by Marcus Schwemer & Michiel Roos 
 
 ";
 
