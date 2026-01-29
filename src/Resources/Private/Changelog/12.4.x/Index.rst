@@ -1,5 +1,6 @@
 :template: changelogOverview.html
 ..  include:: /Includes.rst.txt
+..  _changelog-12-4-x:
 
 ==============
 12.4.x Changes
@@ -24,7 +25,12 @@ None since TYPO3 v12.4.0 LTS release.
 Features
 ========
 
-None since TYPO3 v12.4.0 LTS release.
+..  toctree::
+    :maxdepth: 1
+    :titlesonly:
+    :glob:
+
+    Feature-*
 
 ..  attention::
 

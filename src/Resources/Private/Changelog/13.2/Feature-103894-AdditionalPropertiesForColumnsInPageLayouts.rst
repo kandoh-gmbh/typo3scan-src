@@ -43,6 +43,9 @@ is introduced for the frontend rendering,
 which fetches all content for a page and respecting the settings from the
 page layout.
 
+The new data processor allows to manipulate the fetched page content via
+the PSR-14 :ref:`AfterContentHasBeenFetchedEvent <feature-105638-1732034075>`.
+
 
 Impact
 ======
@@ -97,9 +100,13 @@ Example of the frontend output:
 
     <main>
         <f:for each="{myContent.main.records}" as="record">
-            <h4>{record.header}</h4>
+            <f:cObject typoscriptObjectPath="{record.mainType}" table="{record.mainType}" data="{record}"/>
         </f:for>
     </main>
 
+The :html:`f:cObject` ViewHelper above uses the rendering definition of the
+tt_content table :html:`{record.mainType}` to render the Content Element from
+the list. The attribute :html:`data` expects the raw database record, which is
+retrieved from :html:`{record}`.
 
 .. index:: Backend, Frontend, ext:frontend
