@@ -9,3 +9,5 @@
 !/typo3scan.phar
 /bin/yaml-lint
 /vendor-bin
+.DS_Store
+
