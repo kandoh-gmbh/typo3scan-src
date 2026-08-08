@@ -1,5 +1,4 @@
 <?php
-namespace MichielRoos\TYPO3Scan\Command;
 
 /**
  * Copyright (c) 2018 Michiel Roos
@@ -23,6 +22,8 @@ namespace MichielRoos\TYPO3Scan\Command;
  * SOFTWARE.
  */
 
+namespace MichielRoos\TYPO3Scan\Command;
+
 use MichielRoos\TYPO3Scan\Service\ScannerService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -33,10 +34,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use TYPO3\CMS\Scanner\Domain\Model\DirectoryMatches;
-use TYPO3\CMS\Scanner\Domain\Model\FileMatches;
-use TYPO3\CMS\Scanner\Domain\Model\TheMatch;
-use TYPO3\CMS\Scanner\Matcher\AbstractCoreMatcher;
+use M12R\Scanner\Domain\Model\DirectoryMatches;
+use M12R\Scanner\Domain\Model\FileMatches;
+use M12R\Scanner\Domain\Model\TheMatch;
+use M12R\Scanner\Matcher\AbstractCoreMatcher;
 
 /**
  * Class ScanCommand

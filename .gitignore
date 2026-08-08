@@ -8,6 +8,9 @@
 /.idea
 !/typo3scan.phar
 /bin/yaml-lint
-/vendor-bin
+/vendor-bin/*
+!/vendor-bin/box/
+/vendor-bin/box/*
+!/vendor-bin/box/composer.json
 .DS_Store
 

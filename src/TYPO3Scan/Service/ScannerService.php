@@ -1,5 +1,4 @@
 <?php
-namespace MichielRoos\TYPO3Scan\Service;
 
 /**
  * Copyright (c) 2018 Michiel Roos
@@ -23,9 +22,11 @@ namespace MichielRoos\TYPO3Scan\Service;
  * SOFTWARE.
  */
 
-use TYPO3\CMS\Scanner\Domain\Model\MatcherBundleCollection;
-use TYPO3\CMS\Scanner\Matcher;
-use TYPO3\CMS\Scanner\ScannerFactory;
+namespace MichielRoos\TYPO3Scan\Service;
+
+use M12R\Scanner\Domain\Model\MatcherBundleCollection;
+use M12R\Scanner\Matcher;
+use M12R\Scanner\ScannerFactory;
 
 /**
  * Class ScannerService
@@ -44,7 +45,7 @@ class ScannerService
     private $collection;
 
     /**
-     * @var \TYPO3\CMS\Scanner\Scanner
+     * @var \M12R\Scanner\Scanner
      */
     private $scanner;
 
@@ -58,7 +59,7 @@ class ScannerService
         switch ($version) {
             case '14':
                 $this->collection = new MatcherBundleCollection(
-                    new \TYPO3\CMS\Scanner\Domain\Model\MatcherBundle(
+                    new \M12R\Scanner\Domain\Model\MatcherBundle(
                         self::$matcherBundleBasePath . 'v' . $version,
                         '',
                         Matcher\ArrayDimensionMatcher::class,
@@ -91,10 +92,9 @@ class ScannerService
             case '11':
             case '10':
                 $this->collection = new MatcherBundleCollection(
-                    new \TYPO3\CMS\Scanner\Domain\Model\MatcherBundle(
+                    new \M12R\Scanner\Domain\Model\MatcherBundle(
                         self::$matcherBundleBasePath . 'v' . $version,
                         '',
-
                         Matcher\ArrayDimensionMatcher::class,
                         Matcher\ArrayGlobalMatcher::class,
                         Matcher\ClassConstantMatcher::class,
@@ -120,10 +120,9 @@ class ScannerService
                 break;
             case '9':
                 $this->collection = new MatcherBundleCollection(
-                    new \TYPO3\CMS\Scanner\Domain\Model\MatcherBundle(
+                    new \M12R\Scanner\Domain\Model\MatcherBundle(
                         self::$matcherBundleBasePath . 'v' . $version,
                         '',
-
                         Matcher\ArrayDimensionMatcher::class,
                         Matcher\ArrayGlobalMatcher::class,
                         Matcher\ClassConstantMatcher::class,
@@ -148,10 +147,9 @@ class ScannerService
                 break;
             case '8':
                 $this->collection = new MatcherBundleCollection(
-                    new \TYPO3\CMS\Scanner\Domain\Model\MatcherBundle(
+                    new \M12R\Scanner\Domain\Model\MatcherBundle(
                         self::$matcherBundleBasePath . 'v' . $version,
                         '',
-
                         Matcher\ArrayDimensionMatcher::class,
                         Matcher\ArrayGlobalMatcher::class,
                         Matcher\ClassNameMatcher::class,
@@ -169,10 +167,9 @@ class ScannerService
             case '7':
             default:
                 $this->collection = new MatcherBundleCollection(
-                    new \TYPO3\CMS\Scanner\Domain\Model\MatcherBundle(
+                    new \M12R\Scanner\Domain\Model\MatcherBundle(
                         self::$matcherBundleBasePath . 'v' . $version,
                         '',
-
                         Matcher\ArrayMatcher::class,
                         Matcher\ArrayDimensionMatcher::class,
                         Matcher\ArrayGlobalMatcher::class,
@@ -211,7 +208,7 @@ class ScannerService
      */
     private function setMatcherBundlePath()
     {
-        foreach ([__DIR__ . '/../../../vendor/typo3/cms-scanner/config/Matcher/', __DIR__ . '/../../../../../typo3/cms-scanner/config/Matcher/'] as $file) {
+        foreach ([__DIR__ . '/../../../vendor/m12r/typo3-cms-scanner/config/Matcher/', __DIR__ . '/../../../../../m12r/typo3-cms-scanner/config/Matcher/'] as $file) {
             if (is_dir($file)) {
                 $this::$matcherBundleBasePath = $file;
                 break;

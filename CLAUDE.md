@@ -9,7 +9,13 @@ This is the **source** repository for `typo3scan`, a CLI tool that scans a code 
 Two things follow from that:
 
 - The compiled artifact (`typo3scan.phar`) is built here and then copied into a **separate binary release repository** cloned at `../typo3scan`. That repo holds the distributed binary and the user-facing documentation.
-- The actual matcher *rules* do **not** live here. They live in the `typo3/cms-scanner` library (a fork of the scanner extracted from the TYPO3 v9 core, resolved from `https://github.com/mschwemer/scanner` per `composer.lock`). Fixing a false positive or adding a new matcher almost always means changing the scanner library, not this repository.
+- The actual matcher *rules* do **not** live here. They live in the scanner library (a fork of the scanner extracted from the TYPO3 v9 core, hosted at `https://github.com/mschwemer/scanner`). Fixing a false positive or adding a new matcher almost always means changing the scanner library, not this repository.
+
+### The scanner package was renamed
+
+The fork was relicensed and renamed: the package is **`m12r/typo3-cms-scanner`** and the namespace is **`M12R\Scanner\`** (previously `typo3/cms-scanner` / `TYPO3\CMS\Scanner\`), with a PHP 8.3 floor. This repository tracks its `main` branch as `dev-main` through a normal `vcs` repository entry, so `composer update m12r/typo3-cms-scanner` pulls scanner changes as usual.
+
+The class layout and `config/Matcher/` structure are unchanged from the TYPO3 original, so pre-rename knowledge of the scanner still applies — only the vendor namespace differs. Older material (including this tool's git history and the release repo's docs) will still refer to `TYPO3\CMS\Scanner`.
 
 ## Commands
 
@@ -18,10 +24,17 @@ composer install                      # installs deps; note bin-dir is ./bin
 ./bin/typo3scan scan ~/path/to/code   # run from source
 ./bin/typo3scan scan --target 12 --format markdown --only breaking ~/path/to/code
 
-composer update typo3/cms-scanner     # pull in scanner library changes before building
+composer update m12r/typo3-cms-scanner  # pull in scanner library changes before building
+composer bin box install              # REQUIRED before the first build; see below
 composer build                        # box compile -> typo3scan.phar, then copies it to ./typo3scan
 composer prep                         # copies both phar files to ../typo3scan (the release repo)
 ```
+
+**Box is not installed by `composer install`.** `bin/box` is only a Composer proxy pointing at `vendor-bin/box/vendor/humbug/box/bin/box`, which `composer install` never populates — so `composer build` fails with an `include(): Failed to open stream` warning until you run `composer bin box install` once per checkout. `vendor-bin/box/composer.json` (a single `humbug/box` requirement) *is* tracked; the rest of `/vendor-bin` is gitignored via a narrow negation rule in `.gitignore`, so do not "tidy" that rule into a plain `/vendor-bin` — that would hide the file again and the build would stop being reproducible.
+
+The install reports `Skipped installation of bin ... name conflicts with an existing file` for `box`, `php-scoper`, `php-parse` and others — expected and harmless, since the proxies in `bin/` are already correct.
+
+Box needs `phar.readonly=0`; it restarts itself with that setting, so no php.ini change is needed.
 
 **Exit codes matter and are load-bearing for CI use:** `scan` returns `1` when *any* match is found and `0` when the code is clean. Do not "fix" this to always return 0.
 
@@ -33,11 +46,13 @@ cd ~/path/to/scanner-library && composer install && ./.Build/bin/phpunit tests/
 
 ### Working on the scanner library alongside this tool
 
-Add a `path` repository as the **first** entry in `composer.json` `repositories` pointing at the local scanner clone, then `composer update`. Composer symlinks the library so edits are reflected immediately when running `./bin/typo3scan`.
+As a **temporary local override only**, add a `path` repository as the first entry in `composer.json` `repositories` pointing at the local scanner clone, then `composer update`. Composer symlinks the library so edits are reflected immediately when running `./bin/typo3scan`.
 
 ```json
 { "type": "path", "url": "~/Projects/TYPO3/scanner/" }
 ```
+
+Revert this before committing — the committed state resolves the scanner from the `vcs` repository, never from a local path.
 
 ## Architecture
 
@@ -45,7 +60,7 @@ Only three PHP classes exist; the bulk of the repository is vendored TYPO3 chang
 
 **`bin/typo3scan`** — entry point. Probes three autoload locations so the same file works as a Composer dependency, as a standalone checkout, and inside the phar. Suppresses `E_NOTICE|E_WARNING|E_DEPRECATED` (scanning code written for old TYPO3 versions otherwise floods the output). **The application version string is hardcoded here** (`new Application('TYPO3Scan', '1.7.5')`) — bump it here when releasing.
 
-**`Service/ScannerService.php`** — translates `--target <version>` into a `MatcherBundleCollection`. Each supported major version gets its own `case` listing exactly which `Matcher\*` classes apply, because older TYPO3 versions have fewer matcher types. It resolves the rule files from `vendor/typo3/cms-scanner/config/Matcher/v<version>/` via `setMatcherBundlePath()`, which probes two relative paths — one for a phar/standalone layout, one for when this package is itself installed under someone else's `vendor/`. `case '7'` is also the `default`, so an unknown `--target` silently scans against v7 rules.
+**`Service/ScannerService.php`** — translates `--target <version>` into a `MatcherBundleCollection`. Each supported major version gets its own `case` listing exactly which `Matcher\*` classes apply, because older TYPO3 versions have fewer matcher types. It resolves the rule files from `vendor/m12r/typo3-cms-scanner/config/Matcher/v<version>/` via `setMatcherBundlePath()`, which probes two relative paths — one for a phar/standalone layout, one for when this package is itself installed under someone else's `vendor/`. These are **plain strings, not imports**, so they are invisible to any namespace-wide search-and-replace; if the scanner package is ever renamed again, updating the `use` statements alone will leave the tool reporting "0 matches" with no error. `case '7'` is also the `default`, so an unknown `--target` silently scans against v7 rules.
 
 **`Command/ScanCommand.php`** — everything else. The flow is: scan → three filter passes (`filterByType` for `--only`, `filterByIndicators` for `--strong/weak`, `filterByIssuenumbers` for `--issue`/`--ignore`) → count/percentage statistics → Twig render. Each filter rebuilds a fresh `DirectoryMatches`/`FileMatches` tree rather than mutating in place.
 

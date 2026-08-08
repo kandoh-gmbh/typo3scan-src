@@ -4,8 +4,62 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d379ecd8553ac7e3898018e880b9e8db",
+    "content-hash": "54ccf36c47c8faf20188fc10b8b5a30d",
     "packages": [
+        {
+            "name": "m12r/typo3-cms-scanner",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mschwemer/scanner.git",
+                "reference": "5500641c8048b1d3d76d0ae92d7c9189d2241735"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mschwemer/scanner/zipball/5500641c8048b1d3d76d0ae92d7c9189d2241735",
+                "reference": "5500641c8048b1d3d76d0ae92d7c9189d2241735",
+                "shasum": ""
+            },
+            "require": {
+                "nikic/php-parser": "^5.4",
+                "php": "^8.3",
+                "symfony/finder": "^7.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^12.5"
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "M12R\\Scanner\\": "src/",
+                    "M12R\\Scanner\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Christian Kuhn",
+                    "email": "christian.kuhn@typo3.org"
+                },
+                {
+                    "name": "Oliver Hader",
+                    "email": "oliver.hader@typo3.org"
+                },
+                {
+                    "name": "Marcus Schwemer",
+                    "email": "marcus-dev@schwemer.de"
+                }
+            ],
+            "description": "TYPO3 CMS static file analysis",
+            "support": {
+                "source": "https://github.com/mschwemer/scanner/tree/main",
+                "issues": "https://github.com/mschwemer/scanner/issues"
+            },
+            "time": "2026-08-08T14:31:26+00:00"
+        },
         {
             "name": "nikic/php-parser",
             "version": "v5.7.0",
@@ -1268,55 +1322,6 @@
                 }
             ],
             "time": "2026-03-17T21:31:11+00:00"
-        },
-        {
-            "name": "typo3/cms-scanner",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mschwemer/scanner.git",
-                "reference": "555fa45bef884a4ea0fd5d3ff48bcdd85cd4cf97"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mschwemer/scanner/zipball/555fa45bef884a4ea0fd5d3ff48bcdd85cd4cf97",
-                "reference": "555fa45bef884a4ea0fd5d3ff48bcdd85cd4cf97",
-                "shasum": ""
-            },
-            "require": {
-                "nikic/php-parser": "^5.4",
-                "symfony/finder": "^7.1"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^8"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "TYPO3\\CMS\\Scanner\\": "src/",
-                    "TYPO3\\CMS\\Scanner\\Tests\\": "tests/"
-                }
-            },
-            "license": [
-                "GPLv2"
-            ],
-            "authors": [
-                {
-                    "name": "Christian Kuhn",
-                    "email": "christian.kuhn@typo3.org"
-                },
-                {
-                    "name": "Oliver Hader",
-                    "email": "oliver.hader@typo3.org"
-                }
-            ],
-            "description": "TYPO3 CMS static file analysis",
-            "support": {
-                "source": "https://github.com/mschwemer/scanner/tree/master",
-                "issues": "https://github.com/mschwemer/scanner/issues"
-            },
-            "time": "2026-01-29T16:08:16+00:00"
         }
     ],
     "packages-dev": [
@@ -2446,13 +2451,13 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "roave/security-advisories": 20,
-        "typo3/cms-scanner": 20
+        "m12r/typo3-cms-scanner": 20,
+        "roave/security-advisories": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.1"
+        "php": "^8.3"
     },
     "platform-dev": {},
     "plugin-api-version": "2.9.0"
