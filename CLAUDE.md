@@ -87,5 +87,6 @@ Commits `61c5dd6` and `1b13976` are the reference for this sequence (v14 support
 ## Conventions
 
 - Commit messages follow the existing prefix style: `[TASK]`, `[FEATURE]`, `[BUGFIX]`, `[CLEANUP]`.
+- The package is `m12r/typo3scan` and the namespace is `M12R\TYPO3Scan\` (both formerly `michielroos` / `MichielRoos`). The PSR-4 root still maps to `src/TYPO3Scan` — only the vendor segment changed, so do not rename that directory. Michiel Roos' author entry in `composer.json`, the `.github/FUNDING.yml` link, the per-file MIT copyright headers, and the credit in the CLI banner are **attribution and stay as they are**; they are not leftovers of the rename.
 - The existing source predates modern TYPO3 CGL — no `declare(strict_types=1)`, docblock-based typing, `protected` helpers on the command class. Match the surrounding file when editing it; apply stricter CGL to genuinely new files rather than churning the existing three classes.
 - `bin/` is gitignored except for `bin/typo3scan` (Composer's `bin-dir` is `bin`, so `composer install` drops `box`, `php-scoper` etc. there). `typo3scan.phar` is force-tracked despite the ignore rules.

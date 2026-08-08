@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-namespace MichielRoos\TYPO3Scan\Command;
+namespace M12R\TYPO3Scan\Command;
 
-use MichielRoos\TYPO3Scan\Service\ScannerService;
+use M12R\TYPO3Scan\Service\ScannerService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -41,7 +41,7 @@ use M12R\Scanner\Matcher\AbstractCoreMatcher;
 
 /**
  * Class ScanCommand
- * @package MichielRoos\TYPO3Scan\Command
+ * @package M12R\TYPO3Scan\Command
  */
 class ScanCommand extends Command
 {

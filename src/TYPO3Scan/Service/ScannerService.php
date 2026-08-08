@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-namespace MichielRoos\TYPO3Scan\Service;
+namespace M12R\TYPO3Scan\Service;
 
 use M12R\Scanner\Domain\Model\MatcherBundleCollection;
 use M12R\Scanner\Matcher;
@@ -30,7 +30,7 @@ use M12R\Scanner\ScannerFactory;
 
 /**
  * Class ScannerService
- * @package MichielRoos\TYPO3Scan\Service
+ * @package M12R\TYPO3Scan\Service
  */
 class ScannerService
 {
