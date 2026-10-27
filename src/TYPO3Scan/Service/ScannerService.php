@@ -24,6 +24,7 @@
 
 namespace M12R\TYPO3Scan\Service;
 
+use M12R\Scanner\Domain\Model\DirectoryMatches;
 use M12R\Scanner\Domain\Model\MatcherBundleCollection;
 use M12R\Scanner\Matcher;
 use M12R\Scanner\ScannerFactory;
@@ -193,11 +194,12 @@ class ScannerService
         $this->scanner = ScannerFactory::create()->createFor();
     }
 
-    public function scan($path)
+    public function scan(string $path, string|array $excludeDirs): DirectoryMatches
     {
         $result = $this->scanner->scanPath(
             $path,
-            $this->collection
+            $this->collection,
+            $excludeDirs,
         );
         return $result;
     }
